@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { styled } from "styled-components";
+import { fetchCoins } from "../api";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -49,10 +51,10 @@ const Img = styled.img`
 const Title = styled.h1`
   font-size: 48px;
 
-  color: ${(props) => props.theme.accentColor};
+  color: ${(props) => props.theme.textColor};
 `;
 
-interface CoinInterface {
+interface ICoin {
   id: string;
   name: string;
   symbol: string;
@@ -62,28 +64,30 @@ interface CoinInterface {
   type: string;
 }
 const Coins = () => {
-  const [coins, setCoins] = useState<CoinInterface[]>([]);
-  const [loading, setLoaing] = useState(true);
-  useEffect(() => {
-    (async () => {
-      const response = await fetch("https://api.coinpaprika.com/v1/coins");
-      const json = await response.json();
-      setCoins(json.slice(0, 100));
-      setLoaing(false);
-    })();
-  }, []);
+  // const [coins, setCoins] = useState<CoinInterface[]>([]);
+  // const [loading, setLoaing] = useState(true);
+  // useEffect(() => {
+  //   (async () => {
+  //     const response = await fetch("https://api.coinpaprika.com/v1/coins");
+  //     const json = await response.json();
+  //     setCoins(json.slice(0, 100));
+  //     setLoaing(false);
+  //   })();
+  // }, []);
+  const { isLoading, data } = useQuery<ICoin[]>("all Coins", fetchCoins);
   return (
     <Container>
       <Header>
-        <Title>COINs</Title>
+        <Title>Coin List</Title>
       </Header>
-      {loading ? (
+      {isLoading ? (
         <Loader>Loading ...</Loader>
       ) : (
         <CoinsList>
-          {coins.map((coin) => (
+          {data?.slice(0, 100).map((coin) => (
             <Coin key={coin.id}>
-              {/* <Link to={`/${coin.id}`}> */}
+              {/* <Link to={`/${coin.id}`}> Link를 string 형식으로 url를 전달할때 사용하는 방법 */}
+              {/* Link를 이용해서 데이터를 넘겨줄때 사용하는 방법 */}
               <Link
                 to={{
                   pathname: `/${coin.id}`,
