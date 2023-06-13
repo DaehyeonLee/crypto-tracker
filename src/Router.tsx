@@ -2,7 +2,9 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Coins from "./routes/Coins";
 import Coin from "./routes/Coin";
 
-const Router = () => {
+interface IRouterProps {}
+
+const Router = ({}: IRouterProps) => {
   return (
     <BrowserRouter>
       <Switch>
